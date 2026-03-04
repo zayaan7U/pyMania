@@ -14,17 +14,26 @@ pygame.display.set_caption("Racing Game")
 
 clock = pygame.time.Clock() 
 
+car = Car((WIDTH - 50)//2, HEIGHT - 30)  # centered horizontally at the bottom of the screen
+
 running = True
-while running: 
-  clock.tick(60) # 60 FPS 
+while running:
+    clock.tick(60)  # 60 FPS
 
-  for event in pygame.event.get(): 
-    if event.type == pygame.QUIT: 
-        running = False 
- 
-  screen.fill((30, 30, 30))  # background color 
-  pygame.display.flip() 
-  
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
+    # Input
+    keys = pygame.key.get_pressed()
+
+    # Update
+    car.move(keys, WIDTH)
+
+    # Draw
+    screen.fill((30, 30, 30))  # background
+    car.draw(screen)
+    pygame.display.flip()
 pygame.quit() 
 sys.exit()

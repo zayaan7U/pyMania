@@ -6,8 +6,8 @@ import constants
   
 pygame.init() 
 
-width = constants.width
-height = constants.height
+width = constants.WIDTH
+height = constants.HEIGHT
 
 screen = pygame.display.set_mode((width, height)) 
 pygame.display.set_caption("Racing Game") 

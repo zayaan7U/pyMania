@@ -10,7 +10,7 @@ class Car:
         self.color = (200, 0, 0)
         self.velocity = 0       # current speed
         self.acceleration = 0.5 
-        self.friction = 0.9     # deceleration multiplier to make it real world like
+        self.friction = 0.9     # deceleration for real world mechanics
         self.max_speed = 10
 
     def move(self, keys, screen_width):
@@ -29,7 +29,7 @@ class Car:
         if self.velocity < -self.max_speed:
             self.velocity = -self.max_speed
 
-        # dead zone threshold to ensure the car is able to stop
+        # deadzone to make sure car can stop instead of always moving due to friction deceleration
         if abs(self.velocity) < 0.1:
             self.velocity = 0
 

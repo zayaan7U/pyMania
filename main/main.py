@@ -6,15 +6,15 @@ import constants
   
 pygame.init() 
 
-WIDTH = constants.WIDTH
-HEIGHT = constants.HEIGHT
+width = constants.width
+height = constants.height
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT)) 
+screen = pygame.display.set_mode((width, height)) 
 pygame.display.set_caption("Racing Game") 
 
 clock = pygame.time.Clock() 
 
-car = Car((WIDTH - 50)//2, HEIGHT - 30)  # centered horizontally at the bottom of the screen
+car = Car((width - 50)//2, height - 30)  # centered horizontally at the bottom of the screen
 
 running = True
 while running:
@@ -29,7 +29,7 @@ while running:
     keys = pygame.key.get_pressed()
 
     # Update
-    car.move(keys, WIDTH)
+    car.move(keys, width)
 
     # Draw
     screen.fill((30, 30, 30))  # background

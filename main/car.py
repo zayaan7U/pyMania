@@ -30,6 +30,7 @@ class Car:
         self.velocity = max(self.velocity - self.acceleration,-self.max_speed/2)
         self.move()
 
+    # tech with tim help to make the movement mechanics
     def move(self):
         radians = math.radians(self.angle)
         vertical = math.cos(radians) * self.velocity

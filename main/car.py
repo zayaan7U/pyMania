@@ -1,48 +1,56 @@
 import pygame
+import math
+from functions import blit_rotate_center
 import constants as c
 
 class Car:
-    def __init__(self, x, y):
+
+    def __init__(self,x,y):
         self.x = x
         self.y = y
-        self.width = 50
-        self.height = 30
-        self.color = (200, 0, 0)
-        self.velocity = 0       # current speed
-        self.acceleration = 0.5 
-        self.friction = 0.9     # deceleration for real world mechanics
-        self.max_speed = 10
+        self.image = c.CAR
+        self.angle = 0
+        self.velocity = 0
+        self.acceleration = 0.2
+        self.friction = 0.95
+        self.max_speed = 5
+        self.rotation_vel = 4
 
-    def move(self, keys, screen_width):
-        # acceleration input
-        if keys[pygame.K_RIGHT]:
-            self.velocity += self.acceleration
-        elif keys[pygame.K_LEFT]:
-            self.velocity -= self.acceleration
-        else:
-            # apply friction
-            self.velocity *= self.friction
+    def rotate(self,left=False,right=False):
+        if left:
+            self.angle += self.rotation_vel
+        if right:
+            self.angle -= self.rotation_vel
 
-        # makes velocity not exceed max speed
-        if self.velocity > self.max_speed:
-            self.velocity = self.max_speed
-        if self.velocity < -self.max_speed:
-            self.velocity = -self.max_speed
+    def move_forward(self):
+        self.velocity = min(self.velocity + self.acceleration,self.max_speed)
+        self.move()
 
-        # deadzone to make sure car can stop instead of always moving due to friction deceleration
-        if abs(self.velocity) < 0.1:
+    def move_backward(self):
+        self.velocity = max(self.velocity - self.acceleration,-self.max_speed/2)
+        self.move()
+
+    def move(self):
+        radians = math.radians(self.angle)
+        vertical = math.cos(radians) * self.velocity
+        horizontal = math.sin(radians) * self.velocity
+        self.y -= vertical
+        self.x -= horizontal
+
+    def reduce_speed(self):
+        self.velocity *= self.friction
+        if abs(self.velocity) < 0.05:
             self.velocity = 0
+        self.move()
 
-        # update position
-        self.x += self.velocity
+    def draw(self,screen):
+        blit_rotate_center(screen,self.image,(self.x,self.y),self.angle)
 
-        # boundary check
-        if self.x < 0:
-            self.x = 0
-            self.velocity = 0
-        if self.x > screen_width - self.width:
-            self.x = screen_width - self.width
-            self.velocity = 0
+    def collide(self,mask,x=0,y=0):
+        car_mask = pygame.mask.from_surface(self.image)
+        offset = (int(self.x-x),int(self.y-y))
+        return mask.overlap(car_mask,offset)
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+    def bounce(self):
+        self.velocity = -self.velocity
+        self.move()

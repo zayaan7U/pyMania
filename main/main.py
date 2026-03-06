@@ -1,39 +1,66 @@
-import pygame 
-import sys 
-import car
-import constants
+import pygame
+import sys
+import constants as c
+from car import Car
 
-  
-pygame.init() 
+pygame.init()
 
-width = constants.WIDTH
-height = constants.HEIGHT
+screen = pygame.display.set_mode((c.WIDTH,c.HEIGHT))
+pygame.display.set_caption("Racing Game")
 
-screen = pygame.display.set_mode((width, height)) 
-pygame.display.set_caption("Racing Game") 
+clock = pygame.time.Clock()
 
-clock = pygame.time.Clock() 
-
-car = Car((width - 50)//2, height - 30)  # centered horizontally at the bottom of the screen
+car = Car(180,200)
 
 running = True
-while running:
-    clock.tick(60)  # 60 FPS
 
-    # Event handling
+while running:
+
+    clock.tick(c.FPS)
+
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
 
-    # Input
+
     keys = pygame.key.get_pressed()
 
-    # Update
-    car.move(keys, width)
+    moved = False
 
-    # Draw
-    screen.fill((30, 30, 30))  # background
+    if keys[pygame.K_a]:
+        car.rotate(left=True)
+
+    if keys[pygame.K_d]:
+        car.rotate(right=True)
+
+    if keys[pygame.K_w]:
+        moved = True
+        car.move_forward()
+
+    if keys[pygame.K_s]:
+        moved = True
+        car.move_backward()
+
+    if not moved:
+        car.reduce_speed()
+
+
+    # COLLISION
+    if car.collide(c.TRACK_BORDER_MASK) != None:
+        car.bounce()
+
+
+    # DRAW
+    screen.blit(c.GRASS,(0,0))
+    screen.blit(c.TRACK,(0,0))
+    screen.blit(c.FINISH,c.FINISH_POSITION)
+    screen.blit(c.TRACK_BORDER,(0,0))
+
     car.draw(screen)
-    pygame.display.flip()
-pygame.quit() 
+
+    pygame.display.update()
+
+
+pygame.quit()
 sys.exit()

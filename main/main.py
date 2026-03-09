@@ -15,7 +15,7 @@ car = Car(180,200)
 start_ticks = pygame.time.get_ticks()
 font = pygame.font.Font(None, 30)
 
-#  lap tracking
+#  timer
 def format_time(ms: int) -> str:
     seconds = ms / 1000
     minutes = int(seconds // 60)
